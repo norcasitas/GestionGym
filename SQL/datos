@@ -1,0 +1,20 @@
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (1, 'general');
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (2, 'extras');
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (3, 'musculacion');
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (4, 'spinning');
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (5, 'pilates');
+INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (6, 'entrenamiento funcional');
+
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (1, 'cuota musculacion', 3, 'ingreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (2, 'cuota pilates', 5, 'ingreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (3, 'cuota spinning', 4, 'ingreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (4, 'cuota entrenamiento funcional', 6, 'ingreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (5, 'luz', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (6, 'agua', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (7, 'alarma', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (8, 'gas', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (9, 'serv. ambulancia', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (10, 'dispenser', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (11, 'seguro', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (12, 'jardin', 1, 'egreso');
+INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (13, 'limpieza', 1, 'egreso');
