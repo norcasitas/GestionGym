@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -39,6 +41,8 @@ public class Impresion2 extends javax.swing.JFrame {
         
     public Impresion2() {
         initComponents();
+        desde.getDateEditor().setEnabled(false);
+        hasta.getDateEditor().setEnabled(false);
         tablaMovDefault = (DefaultTableModel) tablaGastos.getModel();
 
         abrirBase();
@@ -101,7 +105,7 @@ public class Impresion2 extends javax.swing.JFrame {
         TextMonto = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        desc = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
         BoxTipo = new javax.swing.JComboBox();
         BotNuevo = new javax.swing.JButton();
@@ -114,7 +118,14 @@ public class Impresion2 extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        cambiosEmail = new javax.swing.JMenuItem();
+        botSalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        crearBackup = new javax.swing.JMenuItem();
+        cargarBackup = new javax.swing.JMenuItem();
+        enviar = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        tecPro = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -172,7 +183,7 @@ public class Impresion2 extends javax.swing.JFrame {
 
         BotAgregarCat.setText("Agregar");
 
-        jLabel6.setText("Area");
+        jLabel6.setText("Servicio");
 
         BotGestionarAreas.setText("Gestionar");
 
@@ -180,13 +191,11 @@ public class Impresion2 extends javax.swing.JFrame {
 
         jLabel8.setText("Monto");
 
-        TextMonto.setText("jTextField1");
-
         jLabel9.setText("Descripcion");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        desc.setColumns(20);
+        desc.setRows(5);
+        jScrollPane2.setViewportView(desc);
 
         jLabel10.setText("Tipo");
 
@@ -206,11 +215,11 @@ public class Impresion2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(BoxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(BoxCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -228,7 +237,8 @@ public class Impresion2 extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(40, 40, 40))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,8 +246,8 @@ public class Impresion2 extends javax.swing.JFrame {
                         .addGap(50, 50, 50)
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2)))
+                .addGap(52, 52, 52)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(BotNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(BotMod, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
@@ -281,7 +291,7 @@ public class Impresion2 extends javax.swing.JFrame {
                         .addComponent(BotMod)
                         .addGap(36, 36, 36)
                         .addComponent(BotEliminar)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jLabel11.setFont(new java.awt.Font("Century Schoolbook L", 1, 24)); // NOI18N
@@ -302,10 +312,50 @@ public class Impresion2 extends javax.swing.JFrame {
         total.setForeground(new java.awt.Color(0, 87, 218));
 
         jMenu1.setText("File");
+
+        cambiosEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/mail.png"))); // NOI18N
+        cambiosEmail.setText("Cambiar correo");
+        jMenu1.add(cambiosEmail);
+
+        botSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/apagar.png"))); // NOI18N
+        botSalir.setText("Salir");
+        botSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botSalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(botSalir);
+
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Backup");
+
+        crearBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/guardarBack.png"))); // NOI18N
+        crearBackup.setText("Crear Backup");
+        jMenu2.add(crearBackup);
+
+        cargarBackup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/subirBack.png"))); // NOI18N
+        cargarBackup.setText("Cargar Backup");
+        jMenu2.add(cargarBackup);
+
+        enviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/enviarEmail.png"))); // NOI18N
+        enviar.setText("Enviar ");
+        jMenu2.add(enviar);
+
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Acerca de");
+
+        tecPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/acerca.png"))); // NOI18N
+        tecPro.setText("Tec-Pro Software");
+        tecPro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tecProActionPerformed(evt);
+            }
+        });
+        jMenu3.add(tecPro);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -316,43 +366,43 @@ public class Impresion2 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(267, 267, 267)
-                                .addComponent(jLabel11)
-                                .addGap(18, 18, 18)
-                                .addComponent(label13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addComponent(imprimir))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(categorias, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(42, 42, 42)
-                                        .addComponent(cargar))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(desde, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(93, 93, 93)
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(hasta, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(267, 267, 267)
+                        .addComponent(jLabel11)
+                        .addGap(18, 18, 18)
+                        .addComponent(label13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(imprimir))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(51, 51, 51)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(2, 2, 2))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 889, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(19, 19, 19))
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(categorias, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addComponent(cargar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(desde, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(93, 93, 93)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(hasta, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 125, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(2, 2, 2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator1)
+                            .addComponent(jScrollPane1))
+                        .addGap(3, 3, 3))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,14 +413,14 @@ public class Impresion2 extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(desde, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(categorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cargar))
                 .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -383,7 +433,7 @@ public class Impresion2 extends javax.swing.JFrame {
                             .addComponent(label13))))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(35, 35, 35))
+                .addGap(3, 3, 3))
         );
 
         pack();
@@ -437,7 +487,15 @@ public class Impresion2 extends javax.swing.JFrame {
         return BotNuevo;
     }
 
-    
+    public void habilitarCampos(boolean si){
+        BoxCategoria.setEnabled(si);
+        fecha.setEnabled(si);
+        TextMonto.setEnabled(si);
+        BoxArea.setEnabled(si);
+        BoxTipo.setEnabled(si);
+        desc.setEnabled(si);
+        
+    }
     
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
         abrirBase();
@@ -450,7 +508,7 @@ public class Impresion2 extends javax.swing.JFrame {
             Gasto gasto;
             while (it.hasNext()) {
                 gasto = it.next();
-                Object row[] = new Object[5];
+                Object row[] = new Object[6];
                 Dato padre = gasto.parent(Dato.class);
                 Categoria papaDato = padre.parent(Categoria.class);
                 row[0] = papaDato.getString("nombre");
@@ -458,7 +516,7 @@ public class Impresion2 extends javax.swing.JFrame {
                 row[2] = gasto.getString("monto");
                 row[3] = padre.getString("ingreso_egreso");
                 row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
-
+                row[5]= gasto.getId().toString();
                 tablaMovDefault.addRow(row);
             }
         } else {
@@ -474,7 +532,7 @@ public class Impresion2 extends javax.swing.JFrame {
             while (it.hasNext()) {
                 gasto = it.next();
                 if (gasto.getDate("fecha").after(desde.getDate()) && gasto.getDate("fecha").before(hasta.getDate())) {
-                    Object row[] = new Object[5];
+                    Object row[] = new Object[6];
                     Dato padre = gasto.parent(Dato.class);
                     Categoria papaDato = padre.parent(Categoria.class);
                     row[0] = papaDato.getString("nombre");
@@ -482,7 +540,7 @@ public class Impresion2 extends javax.swing.JFrame {
                     row[2] = gasto.getString("monto");
                     row[3] = padre.getString("ingreso_egreso");
                     row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
-
+                    row[5]= gasto.getId().toString();
                     tablaMovDefault.addRow(row);
                 }
             }
@@ -504,6 +562,19 @@ public class Impresion2 extends javax.swing.JFrame {
             Logger.getLogger(Impresion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_imprimirActionPerformed
+
+    private void tecProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tecProActionPerformed
+        AcercaDe acercaDe= new AcercaDe(this, true);
+        acercaDe.setLocationRelativeTo(this);
+        acercaDe.setVisible(true);
+    }//GEN-LAST:event_tecProActionPerformed
+
+    private void botSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botSalirActionPerformed
+            int r = JOptionPane.showConfirmDialog(this, "¿Desea cerrar la aplicación?", "Salir", JOptionPane.YES_NO_OPTION);
+            if (r == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }        // TODO add your handling code here:
+    }//GEN-LAST:event_botSalirActionPerformed
 
     public String dateToMySQLDate(Date fecha, boolean paraMostrar) {
         if (fecha != null) {
@@ -540,11 +611,35 @@ public class Impresion2 extends javax.swing.JFrame {
             Base.close();
         }
     }
+
+    public JMenuItem getBotSalir() {
+        return botSalir;
+    }
+
+    public JMenuItem getCambiosEmail() {
+        return cambiosEmail;
+    }
+
+    public JMenuItem getCargarBackup() {
+        return cargarBackup;
+    }
+
+    public JMenuItem getCrearBackup() {
+        return crearBackup;
+    }
+
+    public JMenuItem getEnviar() {
+        return enviar;
+    }
     
     public void setActionListener(ActionListener lis){
         BotAgregarCat.addActionListener(lis);
         BotGestionarAreas.addActionListener(lis);
         BotNuevo.addActionListener(lis);
+          this.cargarBackup.addActionListener(lis);
+                  this.crearBackup.addActionListener(lis);
+        this.cambiosEmail.addActionListener(lis);
+         this.enviar.addActionListener(lis);
     }
     
     /**
@@ -591,9 +686,15 @@ public class Impresion2 extends javax.swing.JFrame {
     private javax.swing.JComboBox BoxCategoria;
     private javax.swing.JComboBox BoxTipo;
     private javax.swing.JTextField TextMonto;
+    private javax.swing.JMenuItem botSalir;
+    private javax.swing.JMenuItem cambiosEmail;
     private javax.swing.JButton cargar;
+    private javax.swing.JMenuItem cargarBackup;
     private javax.swing.JComboBox categorias;
+    private javax.swing.JMenuItem crearBackup;
+    private javax.swing.JTextArea desc;
     private com.toedter.calendar.JDateChooser desde;
+    private javax.swing.JMenuItem enviar;
     private com.toedter.calendar.JDateChooser fecha;
     private com.toedter.calendar.JDateChooser hasta;
     private javax.swing.JButton imprimir;
@@ -609,14 +710,15 @@ public class Impresion2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel label13;
     private javax.swing.JTable tablaGastos;
+    private javax.swing.JMenuItem tecPro;
     private javax.swing.JLabel total;
     // End of variables declaration//GEN-END:variables
 }

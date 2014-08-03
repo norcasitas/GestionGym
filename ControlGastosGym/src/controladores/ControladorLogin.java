@@ -9,6 +9,9 @@ import interfaz.LoginGui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import modelos.Categoria;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
@@ -21,8 +24,13 @@ public class ControladorLogin implements ActionListener{
       private LoginGui login;
       private ControladorPrincipal principalControl;
       private Impresion2 principalGui;
-    
     public ControladorLogin(){
+        try {
+            JFrame.setDefaultLookAndFeelDecorated(true);
+            com.jtattoo.plaf.mcwin.McWinLookAndFeel.setTheme("Pink");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+        }
         login = new LoginGui();
         login.setVisible(true);
         this.login.setActionListener(this);
@@ -55,6 +63,8 @@ public static void abrirBase() {
             
             principalGui.setVisible(true);
             login.dispose();
+                        EmailThread emailThread = new EmailThread();
+                        emailThread.run();
         }
     }
     
