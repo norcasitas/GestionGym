@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelos.Categoria;
@@ -41,6 +42,11 @@ public class Impresion2 extends javax.swing.JFrame {
         
     public Impresion2() {
         initComponents();
+        BotEliminar.setEnabled(false);
+        BotMod.setEnabled(false);
+        BoxTipo.setEnabled(false);
+        BloquearCampos(false);
+        BotonesNuevo(true);
         desde.getDateEditor().setEnabled(false);
         hasta.getDateEditor().setEnabled(false);
         tablaMovDefault = (DefaultTableModel) tablaGastos.getModel();
@@ -72,6 +78,26 @@ public class Impresion2 extends javax.swing.JFrame {
             Logger.getLogger(Impresion.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    public void BloquearCampos(boolean b){
+        BoxArea.setEnabled(b);
+        BoxCategoria.setEnabled(b);
+        //BoxTipo.setEnabled(b);
+        TextMonto.setEnabled(b);
+        desc.setEnabled(b);
+        fecha.setEnabled(b);
+    }
+    public void BotonesNuevo(boolean b){
+        if(b){
+            BotNuevo.setText("Nuevo");
+            BotMod.setText("Modificar");
+            BotEliminar.setText("Eliminar");
+        }else{
+            BotNuevo.setText("Guardar");
+            BotMod.setText("Modificar");
+            BotEliminar.setText("Cancelar");
+        }
     }
 
     /**
@@ -128,6 +154,7 @@ public class Impresion2 extends javax.swing.JFrame {
         tecPro = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gestion de ingresos - egresos ");
 
         jLabel1.setFont(new java.awt.Font("Century Schoolbook L", 1, 14)); // NOI18N
         jLabel1.setText("Desde");
@@ -199,7 +226,7 @@ public class Impresion2 extends javax.swing.JFrame {
 
         jLabel10.setText("Tipo");
 
-        BoxTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ingreso", "Egreso" }));
+        BoxTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ingreso", "egreso" }));
 
         BotNuevo.setText("Nuevo");
 
@@ -420,7 +447,7 @@ public class Impresion2 extends javax.swing.JFrame {
                     .addComponent(categorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cargar))
                 .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -458,6 +485,11 @@ public class Impresion2 extends javax.swing.JFrame {
     public JComboBox getBoxTipo() {
         return BoxTipo;
     }
+
+    public JTextArea getDesc() {
+        return desc;
+    }
+    
 
     public DefaultTableModel getTablaMovDefault() {
         return tablaMovDefault;
@@ -636,6 +668,8 @@ public class Impresion2 extends javax.swing.JFrame {
         BotAgregarCat.addActionListener(lis);
         BotGestionarAreas.addActionListener(lis);
         BotNuevo.addActionListener(lis);
+        BotEliminar.addActionListener(lis);
+        BotMod.addActionListener(lis);
           this.cargarBackup.addActionListener(lis);
                   this.crearBackup.addActionListener(lis);
         this.cambiosEmail.addActionListener(lis);

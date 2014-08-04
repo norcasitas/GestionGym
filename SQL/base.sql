@@ -20,7 +20,7 @@ CREATE  TABLE `gestionGym`.`gastos` (
   `dato_id` INT NULL ,
   `monto` FLOAT NULL ,
   `fecha` DATE NULL ,
-  `desc` VARCHAR (200),
+  `descrip` VARCHAR (200),
   PRIMARY KEY (`id`) );
 
 ALTER TABLE `gestionGym`.`categoria` RENAME TO  `gestionGym`.`categorias` ;

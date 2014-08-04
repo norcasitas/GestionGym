@@ -4,6 +4,10 @@
  */
 package interfaz;
 
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
 /**
  *
  * @author alan
@@ -16,6 +20,18 @@ public class AddCategoriaGui extends javax.swing.JDialog {
     public AddCategoriaGui(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+
+    public JButton getjButton1() {
+        return jButton1;
+    }
+
+    public JTextField getjTextField1() {
+        return jTextField1;
+    }
+
+    public void setActionListener(ActionListener lis) {
+        this.jButton1.addActionListener(lis);
     }
 
     /**
@@ -32,10 +48,9 @@ public class AddCategoriaGui extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Agregar categoria");
 
         jLabel1.setText("Nueva categoria:");
-
-        jTextField1.setText("jTextField1");
 
         jButton1.setText("Agregar");
 

@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import modelos.Categoria;
+import modelos.Dato;
+import modelos.Gasto;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -60,7 +62,23 @@ public static void abrirBase() {
                 Categoria c = i.next();
                 principalGui.getBoxCategoria().addItem(c.get("nombre"));
             }
-            
+            principalGui.getTablaMovDefault().setRowCount(0);
+            abrirBase();
+            LazyList gastos = Gasto.findAll();
+            Iterator<Gasto> it = gastos.iterator();
+            while(it.hasNext()){
+                Gasto gasto = it.next();
+                Dato dato = Dato.first("id = ?", gasto.get("dato_id"));
+                Categoria c = Categoria.first("id = ?", dato.get("categoria_id"));
+                Object row[] = new Object[6];
+                row[0] = c.get("nombre");
+                row[1] = dato.get("descripcion");
+                row[2] = gasto.get("monto");
+                row[3] = dato.get("ingreso_egreso");
+                row[4] = gasto.get("fecha");
+                row[5] = gasto.get("id");
+                principalGui.getTablaMovDefault().addRow(row);
+            }
             principalGui.setVisible(true);
             login.dispose();
                         EmailThread emailThread = new EmailThread();
