@@ -182,35 +182,10 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch">
-			<staticText>
-				<reportElement style="Column header" x="11" y="14" width="138" height="20" uuid="e3d4e3f5-6bdf-4527-bdf7-491b9f835c7f"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif"/>
-				</textElement>
-				<text><![CDATA[TOTAL]]></text>
-			</staticText>
-			<textField pattern="###0.00">
-				<reportElement mode="Transparent" x="276" y="14" width="139" height="20" uuid="26057b6a-4739-48fe-85e7-7b3cdb4e3e56"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="0" y="14" width="555" height="20" backcolor="#C2C0C0" uuid="27fb2e89-4529-4792-8aca-455d9ed93bd5"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="254" y="14" width="22" height="20" uuid="c81c611b-384b-4f50-b98e-18a15fcbfe30"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[$]]></text>
-			</staticText>
-		</band>
+		<band height="45" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="20" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
 				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="622c66e6-8687-46f5-85b0-a1e36fb339d7"/>
 				<textElement textAlignment="Right">
@@ -235,6 +210,31 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="40" splitType="Stretch">
+			<textField pattern="###0.00">
+				<reportElement mode="Transparent" x="278" y="11" width="139" height="20" uuid="26057b6a-4739-48fe-85e7-7b3cdb4e3e56"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="2" y="11" width="138" height="20" uuid="e3d4e3f5-6bdf-4527-bdf7-491b9f835c7f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="11" width="22" height="20" uuid="c81c611b-384b-4f50-b98e-18a15fcbfe30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[$]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="11" width="555" height="20" backcolor="#C2C0C0" uuid="27fb2e89-4529-4792-8aca-455d9ed93bd5"/>
+			</rectangle>
+		</band>
 	</summary>
 </jasperReport>

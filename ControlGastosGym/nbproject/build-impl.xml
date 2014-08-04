@@ -1015,12 +1015,45 @@ is divided into following sections:
     </target>
     <target depends="init,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen,-do-jar-jar,-do-jar-delete-manifest" name="-do-jar-without-libraries"/>
     <target depends="init,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen,-do-jar-copylibs,-do-jar-delete-manifest" name="-do-jar-with-libraries"/>
-    <target name="-post-jar">
-        <!-- Empty placeholder for easier customization. -->
-        <!-- You can override this target in the ../build.xml file. -->
-    </target>
+<!--
+                =========================
+                Agregado manualmente jar con librerías
+                =========================
+            -->
+<target name="-post-jar">
+    <property name="store.jar.name" value="ControlGastosGym"/>
+ 
+    <property name="store.dir" value="dist"/>
+    <property name="store.jar" value="${store.dir}/${store.jar.name}.jar"/>
+ 
+    <echo message="Packaging ${application.title} into a single JAR at ${store.jar}"/>
+ 
+    <jar destfile="${store.dir}/temp_final.jar" filesetmanifest="skip">
+        <zipgroupfileset dir="dist" includes="*.jar"/>
+        <zipgroupfileset dir="lib" includes="*.jar"/>
+
+ 
+        <manifest>
+            <attribute name="Main-Class" value="${main.class}"/>
+        </manifest>
+    </jar>
+ 
+    <zip destfile="${store.jar}">
+        <zipfileset src="${store.dir}/temp_final.jar"
+        excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+    </zip>
+ 
+    <delete file="${store.dir}/temp_final.jar"/>
+    <delete dir="${store.dir}/lib"/>
+    <delete file="${store.dir}/README.TXT"/>
+    <delete file="${store.dir}"/>
+</target>
     <target depends="init,compile,-pre-jar,-do-jar-without-libraries,-do-jar-with-libraries,-post-jar" name="-do-jar"/>
     <target depends="init,compile,-pre-jar,-do-jar,-post-jar" description="Build JAR." name="jar"/>
+    
+    
+    
+    
     <!--
                 =================
                 EXECUTION SECTION

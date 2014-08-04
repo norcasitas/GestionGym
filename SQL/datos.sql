@@ -1,9 +1,9 @@
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (1, 'general');
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (2, 'extras');
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (3, 'musculacion');
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (4, 'spinning');
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (5, 'pilates');
-INSERT INTO `gestionGym`.`categoria` (`id`, `nombre`) VALUES (6, 'entrenamiento funcional');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (1, 'general');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (2, 'extras');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (3, 'musculacion');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (4, 'spinning');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (5, 'pilates');
+INSERT INTO `gestionGym`.`categorias` (`id`, `nombre`) VALUES (6, 'entrenamiento funcional');
 
 INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (1, 'cuota musculacion', 3, 'ingreso');
 INSERT INTO `gestionGym`.`datos` (`id`, `descripcion`, `categoria_id`, `ingreso_egreso`) VALUES (2, 'cuota pilates', 5, 'ingreso');

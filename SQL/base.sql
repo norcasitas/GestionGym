@@ -49,3 +49,9 @@ ALTER TABLE `gestionGym`.`emails` ADD COLUMN `id` VARCHAR(45) NOT NULL  AFTER `p
 ALTER TABLE `gestionGym`.`emails` CHANGE COLUMN `id` `id` INT NOT NULL AUTO_INCREMENT  
 , DROP PRIMARY KEY 
 , ADD PRIMARY KEY (`id`, `email`) ;
+
+create table usuarios (
+	id integer not null auto_increment,
+	nombre varchar(50) default 'tecpro',
+	pass varchar(50) default 'tecpro',
+	primary key(id));

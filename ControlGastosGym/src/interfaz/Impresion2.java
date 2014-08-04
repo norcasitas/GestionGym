@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
@@ -49,6 +50,8 @@ public class Impresion2 extends javax.swing.JFrame {
         BotonesNuevo(true);
         desde.getDateEditor().setEnabled(false);
         hasta.getDateEditor().setEnabled(false);
+        fecha.getDateEditor().setEnabled(false);
+
         tablaMovDefault = (DefaultTableModel) tablaGastos.getModel();
 
         abrirBase();
@@ -60,7 +63,6 @@ public class Impresion2 extends javax.swing.JFrame {
             categorias.addItem(cate.get("nombre"));
         }
         categorias.setSelectedItem("Todos");
-        cerrarBase();
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
         date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
@@ -145,6 +147,7 @@ public class Impresion2 extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         cambiosEmail = new javax.swing.JMenuItem();
+        modificarUsuario = new javax.swing.JMenuItem();
         botSalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         crearBackup = new javax.swing.JMenuItem();
@@ -155,16 +158,19 @@ public class Impresion2 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestion de ingresos - egresos ");
+        setIconImage(new ImageIcon(getClass().getResource("/Iconos/inicial.png")).getImage());
 
         jLabel1.setFont(new java.awt.Font("Century Schoolbook L", 1, 14)); // NOI18N
         jLabel1.setText("Desde");
 
         desde.setToolTipText("Ver movimientos desde la fecha");
+        desde.setDateFormatString("dd/MM/yyyy");
 
         jLabel2.setFont(new java.awt.Font("Century Schoolbook L", 1, 14)); // NOI18N
         jLabel2.setText("Hasta");
 
         hasta.setToolTipText("Ver movimientos hasta la fecha");
+        hasta.setDateFormatString("dd/MM/yyyy");
 
         jLabel3.setText("Ver movimientos de ");
 
@@ -215,6 +221,8 @@ public class Impresion2 extends javax.swing.JFrame {
         BotGestionarAreas.setText("Gestionar");
 
         jLabel7.setText("Fecha");
+
+        fecha.setDateFormatString("dd/MM/yyyy");
 
         jLabel8.setText("Monto");
 
@@ -318,7 +326,7 @@ public class Impresion2 extends javax.swing.JFrame {
                         .addComponent(BotMod)
                         .addGap(36, 36, 36)
                         .addComponent(BotEliminar)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jLabel11.setFont(new java.awt.Font("Century Schoolbook L", 1, 24)); // NOI18N
@@ -343,6 +351,10 @@ public class Impresion2 extends javax.swing.JFrame {
         cambiosEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/mail.png"))); // NOI18N
         cambiosEmail.setText("Cambiar correo");
         jMenu1.add(cambiosEmail);
+
+        modificarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/user.png"))); // NOI18N
+        modificarUsuario.setText("Modificar datos del usuario");
+        jMenu1.add(modificarUsuario);
 
         botSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/apagar.png"))); // NOI18N
         botSalir.setText("Salir");
@@ -447,7 +459,7 @@ public class Impresion2 extends javax.swing.JFrame {
                     .addComponent(categorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cargar))
                 .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -530,57 +542,7 @@ public class Impresion2 extends javax.swing.JFrame {
     }
     
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
-        abrirBase();
-        LazyList<Gasto> gastos = null;
-        tablaMovDefault.setRowCount(0);
-        LinkedList<Gasto> gastosLinked = new LinkedList<>();
-        if (categorias.getSelectedItem().toString().equals("Todos")) {
-            gastos = Gasto.where("fecha >= ? and fecha <= ? ", dateToMySQLDate(desde.getDate(), false), dateToMySQLDate(hasta.getDate(), false));
-            Iterator<Gasto> it = gastos.iterator();
-            Gasto gasto;
-            while (it.hasNext()) {
-                gasto = it.next();
-                Object row[] = new Object[6];
-                Dato padre = gasto.parent(Dato.class);
-                Categoria papaDato = padre.parent(Categoria.class);
-                row[0] = papaDato.getString("nombre");
-                row[1] = padre.getString("descripcion");
-                row[2] = gasto.getString("monto");
-                row[3] = padre.getString("ingreso_egreso");
-                row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
-                row[5]= gasto.getId().toString();
-                tablaMovDefault.addRow(row);
-            }
-        } else {
-            Categoria cat = Categoria.findFirst("nombre =?", categorias.getSelectedItem().toString());
-            LazyList<Dato> datos = Dato.where("categoria_id =?", cat.getId());
-            Iterator<Dato> itDatos = datos.iterator();
-            while (itDatos.hasNext()) {
-                Dato dato = itDatos.next();
-                gastosLinked.addAll(dato.getAll(Gasto.class));
-            }
-            Iterator<Gasto> it = gastosLinked.iterator();
-            Gasto gasto;
-            while (it.hasNext()) {
-                gasto = it.next();
-                if (gasto.getDate("fecha").after(desde.getDate()) && gasto.getDate("fecha").before(hasta.getDate())) {
-                    Object row[] = new Object[6];
-                    Dato padre = gasto.parent(Dato.class);
-                    Categoria papaDato = padre.parent(Categoria.class);
-                    row[0] = papaDato.getString("nombre");
-                    row[1] = padre.getString("descripcion");
-                    row[2] = gasto.getString("monto");
-                    row[3] = padre.getString("ingreso_egreso");
-                    row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
-                    row[5]= gasto.getId().toString();
-                    tablaMovDefault.addRow(row);
-                }
-            }
-
-        }
-        DecimalFormat df = new DecimalFormat("0.00########");
-        String result = df.format(sumar());
-        total.setText(result);
+        cargarGastos();
     }//GEN-LAST:event_cargarActionPerformed
 
     private void imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirActionPerformed
@@ -638,11 +600,7 @@ public class Impresion2 extends javax.swing.JFrame {
         }
     }
 
-    private void cerrarBase() {
-        if (Base.hasConnection()) {
-            Base.close();
-        }
-    }
+
 
     public JMenuItem getBotSalir() {
         return botSalir;
@@ -664,6 +622,60 @@ public class Impresion2 extends javax.swing.JFrame {
         return enviar;
     }
     
+    public void cargarGastos(){
+        abrirBase();
+        LazyList<Gasto> gastos = null;
+        tablaMovDefault.setRowCount(0);
+        LinkedList<Gasto> gastosLinked = new LinkedList<>();
+        if (categorias.getSelectedItem().toString().equals("Todos")) {
+            gastos = Gasto.where("fecha >= ? and fecha <= ? ", dateToMySQLDate(desde.getDate(), false), dateToMySQLDate(hasta.getDate(), false));
+            Iterator<Gasto> it = gastos.iterator();
+            Gasto gasto;
+            while (it.hasNext()) {
+                gasto = it.next();
+                Object row[] = new Object[6];
+                Dato padre = gasto.parent(Dato.class);
+                Categoria papaDato = padre.parent(Categoria.class);
+                row[0] = papaDato.getString("nombre");
+                row[1] = padre.getString("descripcion");
+                
+                row[2] = gasto.getString("monto");
+                row[3] = padre.getString("ingreso_egreso");
+                row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
+                row[5]= gasto.getId().toString();
+                tablaMovDefault.addRow(row);
+            }
+        } else {
+            Categoria cat = Categoria.findFirst("nombre =?", categorias.getSelectedItem().toString());
+            LazyList<Dato> datos = Dato.where("categoria_id =?", cat.getId());
+            Iterator<Dato> itDatos = datos.iterator();
+            while (itDatos.hasNext()) {
+                Dato dato = itDatos.next();
+                gastosLinked.addAll(dato.getAll(Gasto.class));
+            }
+            Iterator<Gasto> it = gastosLinked.iterator();
+            Gasto gasto;
+            while (it.hasNext()) {
+                gasto = it.next();
+                if (gasto.getDate("fecha").after(desde.getDate()) && gasto.getDate("fecha").before(hasta.getDate())) {
+                    Object row[] = new Object[6];
+                    Dato padre = gasto.parent(Dato.class);
+                    Categoria papaDato = padre.parent(Categoria.class);
+                    row[0] = papaDato.getString("nombre");
+                    row[1] = padre.getString("descripcion");
+                    row[2] = gasto.getString("monto");
+                    row[3] = padre.getString("ingreso_egreso");
+                    row[4] = dateToMySQLDate(gasto.getDate("fecha"), true);
+                    row[5]= gasto.getId().toString();
+                    tablaMovDefault.addRow(row);
+                }
+            }
+
+        }
+        DecimalFormat df = new DecimalFormat("0.00########");
+        String result = df.format(sumar());
+        total.setText(result);
+    }
     public void setActionListener(ActionListener lis){
         BotAgregarCat.addActionListener(lis);
         BotGestionarAreas.addActionListener(lis);
@@ -674,8 +686,13 @@ public class Impresion2 extends javax.swing.JFrame {
                   this.crearBackup.addActionListener(lis);
         this.cambiosEmail.addActionListener(lis);
          this.enviar.addActionListener(lis);
+         this.modificarUsuario.addActionListener(lis);
     }
     
+        
+    public JMenuItem getModificarUsuario() {
+        return modificarUsuario;
+    }
     /**
      * @param args the command line arguments
      */
@@ -751,6 +768,7 @@ public class Impresion2 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel label13;
+    private javax.swing.JMenuItem modificarUsuario;
     private javax.swing.JTable tablaGastos;
     private javax.swing.JMenuItem tecPro;
     private javax.swing.JLabel total;

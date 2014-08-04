@@ -7,6 +7,7 @@ package controladores;
 import ABMs.ABMGastos;
 import interfaz.AddCategoriaGui;
 import interfaz.AreaGui;
+import interfaz.CambiarUsuarioGui;
 import interfaz.EnviarManualGui;
 import interfaz.Impresion2;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -56,7 +59,7 @@ public class ControladorPrincipal implements ActionListener {
     public ControladorPrincipal(Impresion2 p) {
         this.principal = p;
         this.principal.setActionListener(this);
-        principal.setVisible(true);
+
         abmGastos = new ABMGastos();
 
         tabla = principal.getTablaGastos();
@@ -71,10 +74,23 @@ public class ControladorPrincipal implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 principal.getBoxArea().removeAllItems();
                 changeValue();
+                if (principal.getBoxArea().getItemCount() <= 0) {
+                    JOptionPane.showMessageDialog(principal, "No posee servicios en esta categoria, cargue uno");
+                }
 
             }
         });
+        principal.getBoxArea().addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               Dato d= Dato.findFirst("descripcion = ?", principal.getBoxArea().getSelectedItem());
+               if(d!=null)
+                    principal.getBoxTipo().setSelectedItem(d.get("ingreso_egreso"));
+            }
+        });
     }
+    
 
     private void changeValue() {
         abrirBase();
@@ -85,31 +101,55 @@ public class ControladorPrincipal implements ActionListener {
             Dato d = i.next();
             principal.getBoxArea().addItem(d.get("descripcion"));
         }
-        cerrarBase();
     }
 
     private void tablaMouseClicked(MouseEvent evt) {
         int r = tabla.getSelectedRow();
         abrirBase();
-        Gasto gasto = Gasto.first("id = ?", tablaDefault.getValueAt(r, 5));
+        Gasto gasto = Gasto.first("id = ?", tabla.getValueAt(r, 5));
         Dato dato = Dato.first("id = ?", gasto.get("dato_id"));
         Categoria categ = Categoria.first("id = ?", dato.get("categoria_id"));
         principal.getBoxCategoria().setSelectedItem(categ.get("nombre"));
         principal.getBoxArea().setSelectedItem(dato.get("descripcion"));
-        principal.getBoxTipo().setSelectedItem(tablaDefault.getValueAt(r, 3));
-        principal.getTextMonto().setText(tablaDefault.getValueAt(r, 2).toString());
+        principal.getBoxTipo().setSelectedItem(tabla.getValueAt(r, 3));
+        principal.getTextMonto().setText(BigDecimal.valueOf(Double.valueOf(tabla.getValueAt(r, 2).toString())).abs().toString());
         principal.getFecha().setDate(gasto.getDate("fecha"));
         principal.getDesc().setText(gasto.getString("descrip"));
         principal.getBotMod().setEnabled(true);
         principal.getBotEliminar().setEnabled(true);
+        nuevoApretado = false;
+                modApretado = false;
+                
+                
+                
+                principal.BloquearCampos(false);
+                principal.BotonesNuevo(true);
+                
+                
+                principal.getBotNuevo().setEnabled(true);
+                
+                
     }
 
     private void tablaMouseClickedArea(MouseEvent evt) {
         int r = areaGui.getTablaAreas().getSelectedRow();
-        areaGui.getTextNombre().setText(areaGui.getTablaDefault().getValueAt(r, 0).toString());
-        areaGui.getBoxCategoria().setSelectedItem(areaGui.getTablaDefault().getValueAt(r, 1).toString());
-        areaGui.getBoxTipo().setSelectedItem(areaGui.getTablaDefault().getValueAt(r, 2).toString());
+        areaGui.getTextNombre().setText(areaGui.getTablaAreas().getValueAt(r, 0).toString());
+        areaGui.getBoxCategoria().setSelectedItem(areaGui.getTablaAreas().getValueAt(r, 1).toString());
+        areaGui.getBoxTipo().setSelectedItem(areaGui.getTablaAreas().getValueAt(r, 2).toString());
         areaGui.getBotModificar().setEnabled(true);
+        areaGui.getBoxCategoria().setEnabled(false);
+        areaGui.getBoxTipo().setEnabled(false);
+        areaGui.getTextNombre().setEnabled(false);
+        areaGui.getBoxCategoria().setEnabled(false);
+        areaGui.getBoxTipo().setEnabled(false);
+        areaGui.getTextNombre().setEnabled(false);
+        areaGui.getBotModificar().setText("Modificar");
+        areaGui.getBotNuevo().setText("Nuevo");
+        modAreaApretado = false;
+        nuevoAreaApretado = false;
+        
+        
+        
     }
 
     @Override
@@ -117,6 +157,7 @@ public class ControladorPrincipal implements ActionListener {
         if (e.getSource() == principal.getBotAgregarCat()) {
             addCat = new AddCategoriaGui(principal, true);
             this.addCat.setActionListener(this);
+            addCat.setLocationRelativeTo(principal);
             addCat.setVisible(true);
         }
         if (e.getSource() == principal.getBotGestionarAreas()) {
@@ -149,7 +190,24 @@ public class ControladorPrincipal implements ActionListener {
                 Categoria c = i.next();
                 areaGui.getBoxCategoria().addItem(c.get("nombre"));
             }
+            areaGui.setLocationRelativeTo(principal);
             areaGui.setVisible(true);
+             principal.BloquearCampos(false);
+                principal.BotonesNuevo(true);
+                principal.getBotEliminar().setEnabled(false);
+                principal.getBotMod().setEnabled(false);
+                principal.getBotNuevo().setEnabled(true);
+                principal.getBoxCategoria().setSelectedIndex(0);
+                principal.getBoxArea().setSelectedIndex(0);
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                // date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
+                principal.getFecha().setDate(date);
+                principal.getTextMonto().setText("");
+                principal.getDesc().setText("");
+                nuevoApretado = false;
+                modApretado = false;
+            
         }
         if (e.getSource() == principal.getBotNuevo()) {
             if (!nuevoApretado && !modApretado) {
@@ -163,23 +221,42 @@ public class ControladorPrincipal implements ActionListener {
                 principal.getBoxArea().setSelectedIndex(0);
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
-                date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
+                //date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
                 principal.getFecha().setDate(date);
                 principal.getTextMonto().setText("");
                 principal.getDesc().setText("");
             } else {
                 if (nuevoApretado) {
+                    boolean ret = true;
                     Gasto g = new Gasto();
-                    abrirBase();
-                    g.set("monto", principal.getTextMonto().getText().toString());
+                    try {
+                        Double monto = Double.valueOf(principal.getTextMonto().getText());
+                        if (principal.getBoxTipo().getSelectedItem().toString().equals("egreso")) {
+                            g.set("monto", BigDecimal.valueOf(monto).setScale(2, RoundingMode.CEILING).abs().negate());
+
+                        } else {
+                            g.set("monto", BigDecimal.valueOf(monto).setScale(2, RoundingMode.CEILING).abs());
+                        }
+                    } catch (NumberFormatException | ClassCastException er) {
+                        ret = false;
+                        JOptionPane.showMessageDialog(principal, "Error en el monto", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+
                     if (principal.getFecha().getCalendar() != null) {
                         g.set("fecha", dateToMySQLDate(principal.getFecha().getCalendar().getTime(), false));
+                    } else {
+                        ret = false;
                     }
                     g.set("descrip", principal.getDesc().getText());
-                    Dato d = Dato.first("descripcion = ?", principal.getBoxArea().getSelectedItem());
-                    g.set("dato_id", d.get("id"));
-                    if (principal.getTextMonto().getText().equals("")) {
-                        JOptionPane.showMessageDialog(principal, "Monto invalido.");
+                    if (principal.getBoxArea().getSelectedItem() != null) {
+                        Dato d = Dato.first("descripcion = ?", principal.getBoxArea().getSelectedItem());
+                        g.set("dato_id", d.get("id"));
+                    } else {
+                        ret = false;
+                    }
+
+                    if (!ret) {
+                        JOptionPane.showMessageDialog(principal, "Hubo un error, revise los datos");
                     } else {
                         if (abmGastos.Alta(g)) {
                             JOptionPane.showMessageDialog(principal, "Movimiento registrado exitosamente.");
@@ -190,68 +267,63 @@ public class ControladorPrincipal implements ActionListener {
                         } else {
                             JOptionPane.showMessageDialog(principal, "Ocurrio un error, no se pudo registrar el movimiento.");
                         }
-                        principal.getTablaMovDefault().setRowCount(0);
-                        LazyList gastos = Gasto.findAll();
-                        Iterator<Gasto> it = gastos.iterator();
-                        while (it.hasNext()) {
-                            Gasto gasto = it.next();
-                            Dato dato = Dato.first("id = ?", gasto.get("dato_id"));
-                            Categoria c = Categoria.first("id = ?", dato.get("categoria_id"));
-                            Object row[] = new Object[6];
-                            row[0] = c.get("nombre");
-                            row[1] = dato.get("descripcion");
-                            row[2] = gasto.get("monto");
-                            row[3] = dato.get("ingreso_egreso");
-                            row[4] = gasto.get("fecha");
-                            row[5] = gasto.get("id");
-                            principal.getTablaMovDefault().addRow(row);
-                        }
+                        principal.cargarGastos();
                         nuevoApretado = false;
                     }
                 }
             }
             if (modApretado) {
-                if (principal.getTextMonto().getText().equals("")) {
-                    JOptionPane.showMessageDialog(principal, "Monto invalido.");
-                } else {
+                boolean retBol = true;
+
+                try {
+                    Double monto = Double.valueOf(principal.getTextMonto().getText());
+
+                } catch (NumberFormatException | ClassCastException er) {
+                    retBol = false;
+                    JOptionPane.showMessageDialog(principal, "Error en el monto", "Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                if (retBol) {
                     int ret = JOptionPane.showConfirmDialog(principal, "¿Desea modificar el movimiento?", null, JOptionPane.YES_NO_OPTION);
                     if (ret == JOptionPane.YES_OPTION) {
                         int r = principal.getTablaGastos().getSelectedRow();
                         abrirBase();
-                        Gasto g = Gasto.first("id = ?", principal.getTablaMovDefault().getValueAt(r, 5));
-                        g.set("monto", principal.getTextMonto().getText().toString());
+                        Gasto g = Gasto.first("id = ?", principal.getTablaGastos().getValueAt(r, 5));
+                        if (principal.getBoxTipo().getSelectedItem().toString().equals("egreso")) {
+                            g.set("monto", BigDecimal.valueOf(Double.valueOf(principal.getTextMonto().getText())).setScale(2, RoundingMode.CEILING).abs().negate());
+
+                        } else {
+                            g.set("monto", BigDecimal.valueOf(Double.valueOf(principal.getTextMonto().getText())).setScale(2, RoundingMode.CEILING).abs());
+                        }
                         if (principal.getFecha().getCalendar() != null) {
                             g.set("fecha", dateToMySQLDate(principal.getFecha().getCalendar().getTime(), false));
+                        } else {
+                            retBol = false;
                         }
                         g.set("descrip", principal.getDesc().getText());
-                        Dato d = Dato.first("descripcion = ?", principal.getBoxArea().getSelectedItem());
-                        g.set("dato_id", d.get("id"));
-                        if (abmGastos.Modificar(g)) {
-                            JOptionPane.showMessageDialog(principal, "Movimiento modificado exitosamente.");
-                            principal.BotonesNuevo(true);
-                            principal.BloquearCampos(false);
-                            principal.getBotMod().setEnabled(false);
-                            principal.getBotEliminar().setEnabled(false);
-                            principal.getTablaMovDefault().setRowCount(0);
-                            LazyList gastos = Gasto.findAll();
-                            Iterator<Gasto> it = gastos.iterator();
-                            while (it.hasNext()) {
-                                Gasto gasto = it.next();
-                                Dato dato = Dato.first("id = ?", gasto.get("dato_id"));
-                                Categoria c = Categoria.first("id = ?", dato.get("categoria_id"));
-                                Object row[] = new Object[6];
-                                row[0] = c.get("nombre");
-                                row[1] = dato.get("descripcion");
-                                row[2] = gasto.get("monto");
-                                row[3] = dato.get("ingreso_egreso");
-                                row[4] = gasto.get("fecha");
-                                row[5] = gasto.get("id");
-                                principal.getTablaMovDefault().addRow(row);
+
+                        if (principal.getBoxArea().getSelectedItem() != null) {
+                            Dato d = Dato.first("descripcion = ?", principal.getBoxArea().getSelectedItem());
+                            g.set("dato_id", d.get("id"));
+                        } else {
+                            retBol = false;
+                        }
+                        if (retBol) {
+                            if (abmGastos.Modificar(g)) {
+                                JOptionPane.showMessageDialog(principal, "Movimiento modificado exitosamente.");
+                                principal.BotonesNuevo(true);
+                                principal.BloquearCampos(false);
+                                principal.getBotMod().setEnabled(false);
+                                principal.getBotEliminar().setEnabled(false);
+                                principal.cargarGastos();
+
+                            } else {
+                                JOptionPane.showMessageDialog(principal, "Ocurrio un error, no se pudo modificar el movimiento.");
                             }
                         } else {
                             JOptionPane.showMessageDialog(principal, "Ocurrio un error, no se pudo modificar el movimiento.");
                         }
                     }
+
                 }
             }
         }
@@ -266,7 +338,7 @@ public class ControladorPrincipal implements ActionListener {
                 principal.getBoxArea().setSelectedIndex(0);
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
-                date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
+                // date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
                 principal.getFecha().setDate(date);
                 principal.getTextMonto().setText("");
                 principal.getDesc().setText("");
@@ -277,26 +349,11 @@ public class ControladorPrincipal implements ActionListener {
                 if (ret == JOptionPane.YES_OPTION) {
                     int r = principal.getTablaGastos().getSelectedRow();
                     abrirBase();
-                    Gasto d = Gasto.first("id = ?", principal.getTablaMovDefault().getValueAt(r, 5));
+                    Gasto d = Gasto.first("id = ?", principal.getTablaGastos().getValueAt(r, 5));
                     if (d != null) {
                         if (abmGastos.Baja(d)) {
                             JOptionPane.showMessageDialog(principal, "Movimiento eliminado exitosamente.");
-                            principal.getTablaMovDefault().setRowCount(0);
-                            LazyList gastos = Gasto.findAll();
-                            Iterator<Gasto> it = gastos.iterator();
-                            while (it.hasNext()) {
-                                Gasto gasto = it.next();
-                                Dato dato = Dato.first("id = ?", gasto.get("dato_id"));
-                                Categoria c = Categoria.first("id = ?", dato.get("categoria_id"));
-                                Object row[] = new Object[6];
-                                row[0] = c.get("nombre");
-                                row[1] = dato.get("descripcion");
-                                row[2] = gasto.get("monto");
-                                row[3] = dato.get("ingreso_egreso");
-                                row[4] = gasto.get("fecha");
-                                row[5] = gasto.get("id");
-                                principal.getTablaMovDefault().addRow(row);
-                            }
+                            principal.cargarGastos();
                         } else {
                             JOptionPane.showMessageDialog(principal, "Ocurrio un error intente nuevamente.");
                         }
@@ -311,7 +368,7 @@ public class ControladorPrincipal implements ActionListener {
                 principal.getBoxArea().setSelectedIndex(0);
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
-                date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
+                // date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
                 principal.getFecha().setDate(date);
                 principal.getTextMonto().setText("");
                 principal.getDesc().setText("");
@@ -370,55 +427,55 @@ public class ControladorPrincipal implements ActionListener {
                     nuevoAreaApretado = true;
                     modAreaApretado = false;
                 } else {
-                    if(nuevoAreaApretado){
-                    int ret = JOptionPane.showConfirmDialog(principal, "¿Desea agregar el servicio " + areaGui.getTextNombre().getText() + "?", null, JOptionPane.YES_NO_OPTION);
-                    if (ret == JOptionPane.YES_OPTION) {
-                        Dato d = new Dato();
-                        d.set("descripcion", areaGui.getTextNombre().getText());
-                        d.set("ingreso_egreso", areaGui.getBoxTipo().getSelectedItem());
-                        abrirBase();
-                        Categoria c = Categoria.first("nombre = ?", areaGui.getBoxCategoria().getSelectedItem());
-                        d.set("categoria_id", c.get("id"));
-                        d.saveIt();
-                        Dato dato = new Dato();
-                        dato = Dato.first("descripcion = ?", areaGui.getTextNombre().getText());
-                        if (dato != null) {
-                            JOptionPane.showMessageDialog(principal, "Servicio creado exitosamente.");
-                            LazyList<Dato> areas = Dato.findAll();
-                            areaGui.getTablaDefault().setRowCount(0);
-                            if (!areas.isEmpty()) {
-                                Iterator<Dato> it = areas.iterator();
-                                while (it.hasNext()) {
-                                    Dato dat = it.next();
-                                    Object row[] = new Object[3];
-                                    row[0] = dat.getString("descripcion");
-                                    row[2] = dat.getString("ingreso_egreso");
-                                    Categoria ca = Categoria.first("id = ?", dat.get("categoria_id"));
-                                    row[1] = ca.getString("nombre");
-                                    areaGui.getTablaDefault().addRow(row);
+                    if (nuevoAreaApretado) {
+                        int ret = JOptionPane.showConfirmDialog(principal, "¿Desea agregar el servicio " + areaGui.getTextNombre().getText() + "?", null, JOptionPane.YES_NO_OPTION);
+                        if (ret == JOptionPane.YES_OPTION) {
+                            Dato d = new Dato();
+                            d.set("descripcion", areaGui.getTextNombre().getText());
+                            d.set("ingreso_egreso", areaGui.getBoxTipo().getSelectedItem());
+                            abrirBase();
+                            Categoria c = Categoria.first("nombre = ?", areaGui.getBoxCategoria().getSelectedItem());
+                            d.set("categoria_id", c.get("id"));
+                            d.saveIt();
+                            Dato dato = new Dato();
+                            dato = Dato.first("descripcion = ?", areaGui.getTextNombre().getText());
+                            if (dato != null) {
+                                JOptionPane.showMessageDialog(principal, "Servicio creado exitosamente.");
+                                LazyList<Dato> areas = Dato.findAll();
+                                areaGui.getTablaDefault().setRowCount(0);
+                                if (!areas.isEmpty()) {
+                                    Iterator<Dato> it = areas.iterator();
+                                    while (it.hasNext()) {
+                                        Dato dat = it.next();
+                                        Object row[] = new Object[3];
+                                        row[0] = dat.getString("descripcion");
+                                        row[2] = dat.getString("ingreso_egreso");
+                                        Categoria ca = Categoria.first("id = ?", dat.get("categoria_id"));
+                                        row[1] = ca.getString("nombre");
+                                        areaGui.getTablaDefault().addRow(row);
+                                    }
+                                    areaGui.getTextNombre().setEnabled(false);
+                                    areaGui.getBoxCategoria().setEnabled(false);
+                                    areaGui.getBoxTipo().setEnabled(false);
+                                    areaGui.getBotModificar().setText("Modificar");
+                                    areaGui.getBotNuevo().setText("Nuevo");
+                                    areaGui.getBotModificar().setEnabled(false);
+                                    nuevoAreaApretado = false;
+                                    modAreaApretado = false;
                                 }
-                                areaGui.getTextNombre().setEnabled(false);
-                                areaGui.getBoxCategoria().setEnabled(false);
-                                areaGui.getBoxTipo().setEnabled(false);
-                                areaGui.getBotModificar().setText("Modificar");
-                                areaGui.getBotNuevo().setText("Nuevo");
-                                areaGui.getBotModificar().setEnabled(false);
-                                nuevoAreaApretado = false;
-                                modAreaApretado = false;
-                            }
 
-                        } else {
-                            JOptionPane.showMessageDialog(principal, "Ocurrio un error intente nuevamente.");
+                            } else {
+                                JOptionPane.showMessageDialog(principal, "Ocurrio un error intente nuevamente.");
+                            }
                         }
                     }
-                }
-            
-                if (modAreaApretado) {
-                    if (areaGui.getTextNombre().getText().equals("")) {
-                        JOptionPane.showMessageDialog(principal, "Servicio invalido.");
-                    } else {
-                       // Dato dato = Dato.first("descripcion = ?", areaGui.getTextNombre().getText());
-                       // if (dato == null) {
+
+                    if (modAreaApretado) {
+                        if (areaGui.getTextNombre().getText().equals("")) {
+                            JOptionPane.showMessageDialog(principal, "Servicio invalido.");
+                        } else {
+                            // Dato dato = Dato.first("descripcion = ?", areaGui.getTextNombre().getText());
+                            // if (dato == null) {
                             Dato d = Dato.first("descripcion = ?", nombreArea);
                             d.set("descripcion", areaGui.getTextNombre().getText());
                             d.set("ingreso_egreso", areaGui.getBoxTipo().getSelectedItem());
@@ -445,12 +502,12 @@ public class ControladorPrincipal implements ActionListener {
                             areaGui.getBotModificar().setText("Modificar");
                             areaGui.getBotNuevo().setText("Nuevo");
                             modAreaApretado = false;
-                       // } else {
-                         //   JOptionPane.showMessageDialog(principal, "Servicio ya existente.");
-                        //}
-                    }
+                            // } else {
+                            //   JOptionPane.showMessageDialog(principal, "Servicio ya existente.");
+                            //}
+                        }
 
-                }
+                    }
                 }
             }
             if (e.getSource() == areaGui.getBotModificar()) {
@@ -511,7 +568,11 @@ public class ControladorPrincipal implements ActionListener {
             }
 
         }
-
+        if (principal.getModificarUsuario() == e.getSource()) {
+            CambiarUsuarioGui cambiarUsuarioGui = new CambiarUsuarioGui(principal, true);
+            cambiarUsuarioGui.setLocationRelativeTo(principal);
+            cambiarUsuarioGui.setVisible(true);
+        }
         if (e.getSource() == principal.getCrearBackup()) {
             modulo = new Modulo();
             modulo.conectar();
@@ -560,9 +621,6 @@ public class ControladorPrincipal implements ActionListener {
         }
     }
 
-    private void cerrarBase() {
-        if (Base.hasConnection()) {
-            Base.close();
-        }
-    }
+
+
 }

@@ -86,6 +86,7 @@ public class AreaGui extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion de Servicios");
 
+        tableAreas.setAutoCreateRowSorter(true);
         tableAreas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -112,6 +113,7 @@ public class AreaGui extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tableAreas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tableAreas);
 
         jLabel1.setText("Nombre");
