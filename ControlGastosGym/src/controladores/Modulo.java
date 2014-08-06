@@ -208,7 +208,7 @@ public class Modulo {
 
     private void restaurar() throws IOException {
         obtenerRutaMysql();
-        Process p = Runtime.getRuntime().exec(installMysql + "mysql -u "+password+" -p"+login+" -h localhost" +bd);
+        Process p = Runtime.getRuntime().exec(installMysql + "mysql -u "+password+" -p"+login+" -h localhost " +bd);
         final InputStream es = p.getErrorStream();
         Thread hiloError = new Thread() {
             public void run() {

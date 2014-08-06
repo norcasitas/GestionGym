@@ -37,7 +37,7 @@ public class ControladorLogin implements ActionListener{
     public ControladorLogin() {
         try {
             JFrame.setDefaultLookAndFeelDecorated(true);
-            com.jtattoo.plaf.mcwin.McWinLookAndFeel.setTheme("Pink");
+            com.jtattoo.plaf.mcwin.McWinLookAndFeel.setTheme("Default");
             UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
@@ -54,7 +54,7 @@ public class ControladorLogin implements ActionListener{
         mu.crearUsuario();
         login.getUser().requestFocus();
         login.getPass().addKeyListener(new KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     login.getPass().setText("");
                     login.getPass().requestFocus();
@@ -80,7 +80,7 @@ public class ControladorLogin implements ActionListener{
                         emailThread.run();
                     } else {
                         login.getPass().setText("");
-                        JOptionPane.showMessageDialog(principalGui, "INTENTE NUEVAMENTE", "¡DATOS INCORRECTOS!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(principalGui, "INTENTEee NUEVAMENTE", "¡DATOS INCORRECTOS!", JOptionPane.ERROR_MESSAGE);
                     }
                     
                 }
