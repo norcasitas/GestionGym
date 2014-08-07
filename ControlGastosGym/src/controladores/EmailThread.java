@@ -44,7 +44,6 @@ public class EmailThread extends Thread {
                     Logger.getLogger(EmailThread.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                cerrarBase();
             }
         } else {
             Modulo moduloBackUp = new Modulo();
@@ -64,9 +63,5 @@ public class EmailThread extends Thread {
         }
     }
 
-    private void cerrarBase() {
-        if (Base.hasConnection()) {
-            Base.close();
-        }
-    }
+
 }

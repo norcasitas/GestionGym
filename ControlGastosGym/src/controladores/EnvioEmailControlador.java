@@ -66,7 +66,6 @@ public class EnvioEmailControlador {
         Email.deleteAll();
         boolean guardado = emailModel.saveIt();
         Base.commitTransaction();
-        cerrarBase();
         if (guardado) {
             JOptionPane.showMessageDialog(null, "Los datos han sido Guardados Correctamente!");
         } else {
@@ -85,7 +84,6 @@ public class EnvioEmailControlador {
         LazyList<Email> emailsModel = Email.findAll();
 
         if (!emailsModel.isEmpty() || !envio) {
-            cerrarBase();
             if (envio) {
                 abrirBase();
                 emailModel = emailsModel.get(0);
@@ -96,7 +94,6 @@ public class EnvioEmailControlador {
                     arrayD[i] = (char) (arrayD[i] - (char) 5);
                 }
                 this.passwo = String.valueOf(arrayD);
-                cerrarBase();
             } else {
                 this.mail = email;
                 this.passwo = passw;
@@ -165,7 +162,6 @@ public class EnvioEmailControlador {
                 enviarModel.setBoolean("enviado", true);
                 enviarModel.saveIt();
                 Base.commitTransaction();
-                cerrarBase();
             }
             t.close();
         } else {
@@ -181,11 +177,7 @@ public class EnvioEmailControlador {
         }
     }
 
-    private void cerrarBase() {
-        if (Base.hasConnection()) {
-            Base.close();
-        }
-    }
+
 
     public static String convertirFechaString() {
         String fechaString;

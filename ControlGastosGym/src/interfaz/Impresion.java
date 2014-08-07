@@ -50,7 +50,6 @@ public class Impresion extends javax.swing.JFrame {
             categorias.addItem(cate.get("nombre"));
         }
         categorias.setSelectedItem("Todos");
-        cerrarBase();
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
         date.setDate(cal.getActualMinimum(Calendar.DAY_OF_MONTH));;
@@ -482,11 +481,7 @@ String result = df.format(sumar());
         }
     }
 
-    private void cerrarBase() {
-        if (Base.hasConnection()) {
-            Base.close();
-        }
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cargar;

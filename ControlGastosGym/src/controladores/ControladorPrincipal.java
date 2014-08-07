@@ -400,10 +400,23 @@ public class ControladorPrincipal implements ActionListener {
                         addCat.dispose();
                         LazyList<Categoria> cats = Categoria.findAll();
                         Iterator<Categoria> i = cats.iterator();
+                        principal.getBoxCategoria().removeAllItems();
                         while (i.hasNext()) {
                             Categoria ca = i.next();
                             principal.getBoxCategoria().addItem(ca.get("nombre"));
                         }
+                        
+                         LazyList<Categoria> categoriasBase = Categoria.findAll();
+        Iterator<Categoria> it = categoriasBase.iterator();
+        String selec=principal.getCategorias().getSelectedItem().toString();
+        principal.getCategorias().removeAllItems();
+        principal.getCategorias().addItem("Todos");
+        while (it.hasNext()) {
+            Categoria cate = it.next();
+            principal.getCategorias().addItem(cate.get("nombre"));
+        }
+        principal.getCategorias().setSelectedItem(selec);
+                        
                     } else {
                         JOptionPane.showMessageDialog(principal, "Ocurrio un error intente nuevamente.");
                     }
